@@ -1,0 +1,19 @@
+# vim: filetype=make
+help:
+	exit 1
+
+report: updategit
+
+updategit:
+# If repo is already cloned, update it, else clone.
+ifneq ("$(wildcard repo)","")
+	git -C repo fetch
+else
+	git clone --bare --filter=tree:0 {REPO} repo
+endif
+
+clean:
+	rm -rf repo
+
+.PHONY: updategit
+
