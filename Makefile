@@ -1,6 +1,7 @@
 .SUFFIXES:
 .DEFAULT_GOAL := all
 repos!=cat repositories.required.csv 2>/dev/null | xargs -I % sh -c "grep '%' repositories.lookup.csv" | cut -d' ' -f2 |  tr '\n' ' '
+today!=date +%Y-%m-%d
 
 -include include.mk
 

@@ -1,4 +1,4 @@
-{SHA}: {SHA}-updategit
+{SHA}: {SHA}-updategit repositories/{SHA}/graph.svg
 
 {SHA}-updategit:
 # If repo is already cloned, update it, else clone.
@@ -13,3 +13,14 @@ endif
 {SHA}-clean:
 	rm -rf repositories/{SHA}
 
+
+repositories/{SHA}/commit-histogram.csv: repositories/{SHA}/repo/objects
+#	git -C repositories/{SHA}/repo log --date=short --pretty=format:%ad | sort | uniq -c | awk '{print $$2,$$1}' > repositories/{SHA}/commit-histogram.csv
+	./sanitized-timeseries.sh repositories/{SHA}/repo > repositories/{SHA}/commit-histogram.csv
+
+repositories/{SHA}/graph.svg: repositories/{SHA}/commit-histogram.csv
+	gnuplot \
+		-e "commits='repositories/{SHA}/commit-histogram.csv'" \
+		-e "today='$(today)'" \
+		commits.gnuplot \
+		> repositories/{SHA}/graph.svg
