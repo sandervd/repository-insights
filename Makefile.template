@@ -1,19 +1,15 @@
-# vim: filetype=make
-help:
-	exit 1
+{SHA}: {SHA}-updategit
 
-report: updategit
-
-updategit:
+{SHA}-updategit:
 # If repo is already cloned, update it, else clone.
-ifneq ("$(wildcard repo)","")
-	git -C repo fetch
+ifneq ("$(wildcard repositories/{SHA}/repo)","")
+	git -C repositories/{SHA}/repo fetch
 else
-	git clone --bare --filter=tree:0 {REPO} repo
+	git clone --bare --filter=tree:0 {REPO} repositories/{SHA}/repo
+	# As a repo is added the tracked list needs to be rebuild.
+	rm -f repositories.tracked.csv
 endif
 
-clean:
-	rm -rf repo
-
-.PHONY: updategit
+{SHA}-clean:
+	rm -rf repositories/{SHA}
 
