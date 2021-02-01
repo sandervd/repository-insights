@@ -18,9 +18,12 @@ repositories/{SHA}/commit-histogram.csv: repositories/{SHA}/repo/objects
 #	git -C repositories/{SHA}/repo log --date=short --pretty=format:%ad | sort | uniq -c | awk '{print $$2,$$1}' > repositories/{SHA}/commit-histogram.csv
 	./sanitized-timeseries.sh repositories/{SHA}/repo > repositories/{SHA}/commit-histogram.csv
 
-repositories/{SHA}/graph.svg: repositories/{SHA}/commit-histogram.csv
+repositories/{SHA}/graph.svg: repositories/{SHA}/commit-histogram.csv repositories/{SHA}/taglog.csv commits.gnuplot
 	gnuplot \
 		-e "commits='repositories/{SHA}/commit-histogram.csv'" \
 		-e "today='$(today)'" \
 		commits.gnuplot \
 		> repositories/{SHA}/graph.svg
+
+repositories/{SHA}/taglog.csv: repositories/{SHA}/repo/objects
+	git -C repositories/{SHA}/repo for-each-ref --format="%(creatordate:short)  %(refname:short) %(objectname)" "refs/tags/*" | sort > repositories/{SHA}/taglog.csv

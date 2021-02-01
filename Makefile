@@ -14,7 +14,7 @@ help:
 
 # Only rebuild the repository lists when the csv changed.
 include.mk:: repositories.required.csv
-	# Add
+	# Rebuild include.mk
 	xargs -a repositories.required.csv -I % sh -c "grep '%' repositories.lookup.csv | ./create-makefile.sh" > include.mk
 
 # Removes repositories that are no longer monitored.
@@ -46,4 +46,4 @@ clean:
 	rm repositories.*.csv
 	rm repositories/* -rf
 
-.PHONY: help clean remove-stale
+.PHONY: help clean remove-stale include.mk
